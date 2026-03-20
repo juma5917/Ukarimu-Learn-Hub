@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📚 Learning Materials</h2>
+    {% if user.role != 'student' %}
+        <a href="{% url 'upload_material' %}" class="btn btn-success">+ Upload New</a>
+    {% endif %}
+</div>
+
+<!-- Filters -->
+<div class="mb-3 d-flex flex-wrap gap-2">
+    <a href="{% url 'library_list' %}" class="btn btn-sm btn-outline-dark">All</a>
+    <a href="?category=notes" class="btn btn-sm btn-outline-primary">Notes</a>
+    <a href="?category=assignment" class="btn btn-sm btn-outline-primary">Assignments</a>
+    <a href="?category=storybook" class="btn btn-sm btn-outline-warning text-dark">Storybooks</a>
+    <a href="?category=textbook" class="btn btn-sm btn-outline-secondary">Textbooks</a>
+    <a href="?category=worksheet" class="btn btn-sm btn-outline-secondary">Worksheets</a>
+    <a href="?category=revision" class="btn btn-sm btn-outline-secondary">Revision</a>
+</div>
+
+<!-- Search Bar -->
+<div class="card p-3 mb-4 bg-light">
+    <form method="get" class="row g-2">
+        <div class="col-md-10">
+            <input type="text" name="q" class="form-control" placeholder="Search by subject, class, or title..." value="{{ request.GET.q }}">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+<!-- Materials Grid -->
+<div class="row g-3">
+    {% for item in materials %}
+        <div class="col-12 col-md-6 col-lg-4 animate-fade-up">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-primary">{{ item.get_category_display }}</span>
+                        <span class="badge bg-info text-dark">{{ item.target_class }}</span>
+                    </div>
+                    <h5 class="card-title text-truncate">{{ item.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ item.subject }}</h6>
+                    <p class="card-text small text-muted">{{ item.description|truncatewords:15 }}</p>
+                </div>
+                <div class="card-footer bg-white border-top-0 pt-0 d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary favorite-btn" title="Favorite">🤍</button>
+                    <a href="{% url 'track_access' item.pk %}" class="btn btn-sm btn-outline-primary w-100 learning-link" target="_blank">
+                        Download / View
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center py-5"><p class="text-muted">No materials found matching your search.</p></div>
+    {% endfor %}
+</div>
+{% endblock %}

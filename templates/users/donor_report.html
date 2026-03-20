@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container bg-white p-5 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
+        <div class="d-flex align-items-center">
+            <img src="{% static 'img/Logo.jpeg' %}" alt="Logo" height="60" class="me-3 rounded">
+            <div>
+                <h2 class="mb-0 text-dark">Impact Report</h2>
+                <small class="text-muted">Ukarimu Learning Hub</small>
+            </div>
+        </div>
+        <div class="text-end">
+            <p class="mb-0"><strong>Generated On:</strong> {{ generated_at|date:"F d, Y" }}</p>
+            <button onclick="window.print()" class="btn btn-sm btn-outline-secondary d-print-none mt-2">🖨️ Print / Save as PDF</button>
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    <h4 class="text-primary mb-3">Executive Summary</h4>
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-3 col-6">
+            <div class="p-3 border rounded bg-light">
+                <h2 class="fw-bold">{{ total_students }}</h2>
+                <small class="text-muted">Registered Students</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 border rounded bg-light">
+                <h2 class="fw-bold">{{ active_students }}</h2>
+                <small class="text-muted">Active Users (30 Days)</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 border rounded bg-light">
+                <h2 class="fw-bold">{{ total_views }}</h2>
+                <small class="text-muted">Learning Interactions</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 border rounded bg-light">
+                <h2 class="fw-bold">{{ total_materials }}</h2>
+                <small class="text-muted">Digital Resources</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Content Distribution -->
+        <div class="col-md-6 mb-4">
+            <h5 class="border-bottom pb-2 mb-3">📚 Content Distribution</h5>
+            <table class="table table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Subject</th>
+                        <th class="text-end">Resources</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
+                    <tr>
+                        <td>{{ subject.subject }}</td>
+                        <td class="text-end">{{ subject.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Top Resources -->
+        <div class="col-md-6 mb-4">
+            <h5 class="border-bottom pb-2 mb-3">🔥 Top Learning Materials</h5>
+            <table class="table table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th class="text-end">Views</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in popular_books %}
+                    <tr>
+                        <td>{{ book.title|truncatechars:30 }}</td>
+                        <td class="text-end fw-bold">{{ book.views }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="mt-5 text-center text-muted small border-top pt-3">
+        <p>Report generated automatically by Ukarimu Digital Learning Platform.</p>
+    </div>
+</div>
+{% endblock %}

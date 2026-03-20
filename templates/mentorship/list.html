@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🤝 Mentorship Portal</h2>
+    {% if is_mentor %}
+    <div>
+        <a href="{% url 'post_announcement' %}" class="btn btn-outline-warning me-2">📢 Post Announcement</a>
+        <a href="{% url 'upload_mentorship_content' %}" class="btn btn-primary">📹 Upload Video/Talk</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row g-4">
+    <!-- Announcements Section -->
+    <div class="col-md-4 order-md-2">
+        <div class="card bg-light border-0">
+            <div class="card-header bg-warning text-dark fw-bold">
+                📢 Announcements
+            </div>
+            <div class="card-body">
+                {% for announcement in announcements %}
+                    <div class="mb-3 border-bottom pb-2">
+                        <h6 class="fw-bold">{{ announcement.title }}</h6>
+                        <p class="small mb-1">{{ announcement.content }}</p>
+                        <small class="text-muted">Posted by {{ announcement.posted_by.username }} on {{ announcement.created_at|date:"M d" }}</small>
+                    </div>
+                {% empty %}
+                    <p class="text-muted small">No active announcements.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="col-md-8 order-md-1">
+        <h4 class="mb-3">Career Talks & Mentorship Videos</h4>
+        <div class="row g-3">
+            {% for item in contents %}
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">{{ item.get_content_type_display }}</span>
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text text-muted small">{{ item.description }}</p>
+                        
+                        {% if item.file %}
+                            <a href="{{ item.file.url }}" class="btn btn-sm btn-outline-primary w-100 mb-2" download>Download File/Video</a>
+                        {% endif %}
+                        
+                        {% if item.link %}
+                            <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary w-100">Open External Link</a>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-white border-top-0 pt-0 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">By {{ item.uploaded_by.username }}</small>
+                        {% if is_mentor or user == item.uploaded_by %}
+                            <a href="{% url 'delete_mentorship_content' item.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No mentorship content uploaded yet.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
