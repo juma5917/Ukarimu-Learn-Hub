@@ -13,6 +13,7 @@
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
+        {% if request.resolver_match.url_name != 'login' %}
         <div id="sidebar-wrapper">
             <div class="sidebar-heading text-center">
                 <img src="{% static 'img/Logo.jpeg' %}" alt="Logo" height="40" class="rounded me-2">
@@ -52,11 +53,14 @@
                 {% endif %}
             </div>
         </div>
+        {% endif %}
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-light bg-white navbar-custom mb-4 px-4 py-3">
+                {% if request.resolver_match.url_name != 'login' %}
                 <button class="btn btn-light border" id="sidebarToggle">☰ Menu</button>
+                {% endif %}
                 
                 <div class="ms-auto d-flex align-items-center">
                     {% if user.is_authenticated %}
