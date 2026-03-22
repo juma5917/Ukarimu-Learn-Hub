@@ -131,7 +131,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media Files (For Textbooks/PDFs uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+if 'RENDER_DISK_ROOT' in os.environ:
+    MEDIA_ROOT = os.path.join(os.environ['RENDER_DISK_ROOT'], 'media')
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'

@@ -28,7 +28,7 @@ def library_list(request):
 def track_access(request, pk):
     material = get_object_or_404(LearningMaterial, pk=pk)
     AccessLog.objects.create(student=request.user, material=material)
-    return redirect(material.file.url)
+    return render(request, 'library/view_material.html', {'material': material})
 
 @login_required
 def upload_material(request):
